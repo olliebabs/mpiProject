@@ -24,10 +24,15 @@ int prime_pairs[total_rows][2];
 
 int counter=0;
 
+if (rank ==0){
+printf("hello from rank 0");
+}
+
 for (int j = 2+(2*rank); j<=max_number; j+=(2*num_procs)){
 	//int temp_even_number=2+(8*j);
-//	printf("even number = %d\n",j);
-
+//	if (rank == 0){
+//		printf("even number = %d\n",j);
+//	}
 	if (rank==0 && j==2){
 		prime_pairs[counter][0]=1;
 		prime_pairs[counter][1]=1;
@@ -45,6 +50,11 @@ for (int j = 2+(2*rank); j<=max_number; j+=(2*num_procs)){
 	counter=counter+1;
 	}
 
+if (rank ==0){
+//for (int j=0; j<total_rows; j++){
+//	printf("pairs = %d and %d\n", prime_pairs[j][0], prime_pairs[j][1]);
+//}
+}
 MPI_Send(&(prime_pairs[0][0]),total_rows * 2,MPI_INT,0,0,MPI_COMM_WORLD);
 
 }
@@ -83,6 +93,7 @@ for (int p = 0;p<=num_procs-1;p++){
 	for (int l=0;l<=total_rows;l++){
 		database[l][0][p]=data_to_save[l][0];
 		database[l][1][p]=data_to_save[l][1];
+		printf("saving from processor %d: %d and %d...\n",p, data_to_save[l][0], data_to_save[l][1]);
 	}
 }
 
@@ -96,8 +107,8 @@ printf("\n\ncollecting back the data...\n\n");
 if (rank == 0){
 printf("data:\n");
 for (int u=0; u< total_rows; u++){
-	for (int m = 1; m<=3;m++){
-		printf("pairs for %d are %d and %d\n", (2*u)+1 ,database[u][0][m], database[u][1][m]);
+	for (int m = 0; m<=3;m++){
+		printf("pairs for %d are %d and %d\n", (6*u)+(2*m) ,database[u][0][m], database[u][1][m]);
 		}
 	}
 }
